@@ -88,7 +88,7 @@ Exited (137) Less than a second ago
 | --- | --- | --- |
 | 137 | no | no |
 
-### Calling shell -> node in the docker container (blocking)
+### Calling shell -> npm in the docker container (blocking)
 #### Run
 ```sh
 docker rm -f test-container ; docker run -d --name test-container sleeptest ./sh/call-npm-sync.sh
@@ -154,7 +154,7 @@ Exited (0) Less than a second ago
 | --- | --- | --- |
 | 0 | yes | no |
 
-### Calling shell -> node in the docker container (forked process)
+### Calling shell -> npm in the docker container (forked process)
 #### Run
 ```sh
 docker rm -f test-container ; docker run -d --name test-container sleeptest ./sh/call-npm-async.sh
