@@ -134,17 +134,18 @@ docker logs test-container ; docker ps -a -f name=test-container --format "{{.St
 #### Output
 ```
 + trap _terminate SIGTERM
-+ child=6
-+ wait 6
++ wait
 + node sleep
 starting
 .
 .
-Shell asked to terminate
 ++ _terminate
 ++ echo 'Shell asked to terminate'
+Shell asked to terminate
 +++ jobs -p
-++ kill 6
+Received sigterm
+++ kill 7
+++ wait
 ++ exit 0
 Exited (0) Less than a second ago
 ```
@@ -166,8 +167,7 @@ docker logs test-container ; docker ps -a -f name=test-container --format "{{.St
 #### Output
 ```
 + trap _terminate SIGTERM
-+ child=7
-+ wait 7
++ wait
 + npm run sleep
 
 > signal-testing@1.0.0 sleep /sleeptest
@@ -175,11 +175,12 @@ docker logs test-container ; docker ps -a -f name=test-container --format "{{.St
 
 starting
 .
+Shell asked to terminate
 ++ _terminate
 ++ echo 'Shell asked to terminate'
 +++ jobs -p
-Shell asked to terminate
 ++ kill 7
+++ wait
 ++ exit 0
 Exited (0) Less than a second ago
 ```
