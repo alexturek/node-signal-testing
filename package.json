@@ -1,0 +1,19 @@
+{
+  "name": "signal-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sleep.js",
+  "scripts": {
+    "sleep": "node sleep"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexturek/node-signal-testing.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexturek/node-signal-testing/issues"
+  },
+  "homepage": "https://github.com/alexturek/node-signal-testing#readme"
+}
