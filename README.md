@@ -2,7 +2,12 @@
 
 I don't really understand how signals and subprocesses work, so this is a "what actually happens" demo.
 
-## Building
+## Building this readme
+```sh
+./test-and-build-readme.sh
+```
+
+## Building the dockerfile
 ```sh
 docker build -t sleeptest .
 ```
@@ -11,12 +16,13 @@ docker build -t sleeptest .
 
 -----
 ### Calling node directly in the docker container
+
 #### Run
 ```sh
-docker rm -f test-container ; docker run -d --name test-container sleeptest node sleep
+docker rm -f test-container
+docker run -d --name test-container sleeptest node sleep
 sleep 1 ; docker stop -t 4 test-container
-docker logs test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
-
+docker logs -n 50 test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
 ```
 
 #### Output
@@ -24,7 +30,7 @@ docker logs test-container ; docker ps -a -f name=test-container --format "{{.St
 starting
 .
 .
-Received sigterm
+Node exiting
 Exited (0) Less than a second ago
 ```
 
@@ -38,14 +44,15 @@ Exited (0) Less than a second ago
 
 #### Run
 ```sh
-docker rm -f test-container ; docker run -d --name test-container sleeptest npm run sleep
+docker rm -f test-container
+docker run -d --name test-container sleeptest npm run sleep
 sleep 1 ; docker stop -t 4 test-container
-docker logs test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
-
+docker logs -n 50 test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
 ```
 
 #### Output
 ```
+
 > signal-testing@1.0.0 sleep /sleeptest
 > node sleep
 
@@ -61,17 +68,17 @@ Exited (0) Less than a second ago
 
 -----
 ### Calling shell -> node in the docker container (blocking)
+
 #### Run
 ```sh
-docker rm -f test-container ; docker run -d --name test-container sleeptest ./sh/call-node-sync.sh
+docker rm -f test-container
+docker run -d --name test-container sleeptest ./sh/call-sync.sh node sleep
 sleep 1 ; docker stop -t 4 test-container
-docker logs test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
-
+docker logs -n 50 test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
 ```
 
 #### Output
 ```
-+ node sleep
 starting
 .
 .
@@ -93,17 +100,17 @@ Exited (137) Less than a second ago
 
 -----
 ### Calling shell -> npm in the docker container (blocking)
+
 #### Run
 ```sh
-docker rm -f test-container ; docker run -d --name test-container sleeptest ./sh/call-npm-sync.sh
+docker rm -f test-container
+docker run -d --name test-container sleeptest ./sh/call-sync.sh npm run sleep
 sleep 1 ; docker stop -t 4 test-container
-docker logs test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
-
+docker logs -n 50 test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
 ```
 
 #### Output
 ```
-+ npm run sleep
 
 > signal-testing@1.0.0 sleep /sleeptest
 > node sleep
@@ -128,30 +135,50 @@ Exited (137) Less than a second ago
 
 -----
 ### Calling shell -> node in the docker container (forked process)
+
 #### Run
 ```sh
-docker rm -f test-container ; docker run -d --name test-container sleeptest ./sh/call-node-async.sh
+docker rm -f test-container
+docker run -d --name test-container sleeptest ./sh/call-async.sh node sleep
 sleep 1 ; docker stop -t 4 test-container
-docker logs test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
-
+docker logs -n 50 test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
 ```
 
 #### Output
 ```
-+ trap _terminate SIGTERM
-+ wait
-+ node sleep
 starting
 .
 .
-++ _terminate
-++ echo 'Shell asked to terminate'
-Shell asked to terminate
-+++ jobs -p
-Received sigterm
-++ kill 7
-++ wait
-++ exit 0
+Shell asked to SIGTERM
+Node exiting
+Exited (0) Less than a second ago
+```
+
+#### Results
+| Exit | Quickly? | Did sleep.js get a chance to do something? |
+| --- | --- | --- |
+| 0 | yes | yes |
+
+-----
+### Calling shell -> npm in the docker container (forked process)
+
+#### Run
+```sh
+docker rm -f test-container
+docker run -d --name test-container sleeptest ./sh/call-async.sh npm run sleep
+sleep 1 ; docker stop -t 4 test-container
+docker logs -n 50 test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
+```
+
+#### Output
+```
+
+> signal-testing@1.0.0 sleep /sleeptest
+> node sleep
+
+starting
+.
+Shell asked to SIGTERM
 Exited (0) Less than a second ago
 ```
 
@@ -161,37 +188,3 @@ Exited (0) Less than a second ago
 | 0 | yes | no |
 
 -----
-### Calling shell -> npm in the docker container (forked process)
-#### Run
-```sh
-docker rm -f test-container ; docker run -d --name test-container sleeptest ./sh/call-npm-async.sh
-sleep 1 ; docker stop -t 4 test-container
-docker logs test-container ; docker ps -a -f name=test-container --format "{{.Status}}"
-
-```
-
-#### Output
-```
-+ trap _terminate SIGTERM
-+ wait
-+ npm run sleep
-
-> signal-testing@1.0.0 sleep /sleeptest
-> node sleep
-
-starting
-.
-Shell asked to terminate
-++ _terminate
-++ echo 'Shell asked to terminate'
-+++ jobs -p
-++ kill 7
-++ wait
-++ exit 0
-Exited (0) Less than a second ago
-```
-
-#### Results
-| Exit | Quickly? | Did sleep.js get a chance to do something? |
-| --- | --- | --- |
-| 0 | yes | no |

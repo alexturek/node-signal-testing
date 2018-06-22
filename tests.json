@@ -1,0 +1,19 @@
+[{
+  "title": "Calling node directly in the docker container",
+  "command": "node sleep"
+}, {
+  "title": "Calling npm directly in the docker container",
+  "command": "npm run sleep"
+}, {
+  "title": "Calling shell -> node in the docker container (blocking)",
+  "command": "./sh/call-sync.sh node sleep"
+}, {
+  "title": "Calling shell -> npm in the docker container (blocking)",
+  "command": "./sh/call-sync.sh npm run sleep"
+}, {
+  "title": "Calling shell -> node in the docker container (forked process)",
+  "command": "./sh/call-async.sh node sleep"
+}, {
+  "title": "Calling shell -> npm in the docker container (forked process)",
+  "command": "./sh/call-async.sh npm run sleep"
+}]

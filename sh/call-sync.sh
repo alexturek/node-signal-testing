@@ -3,4 +3,6 @@
 set +e
 set -x
 
-npm run sleep
+COMMAND="${@}"
+
+$COMMAND
