@@ -9,6 +9,7 @@ docker build -t sleeptest .
 
 ## Tests
 
+-----
 ### Calling node directly in the docker container
 #### Run
 ```sh
@@ -32,6 +33,7 @@ Exited (0) Less than a second ago
 | --- | --- | --- |
 | 0 | yes | yes |
 
+-----
 ### Calling npm directly in the docker container
 
 #### Run
@@ -57,6 +59,7 @@ Exited (0) Less than a second ago
 | --- | --- | --- |
 | 0 | yes | no |
 
+-----
 ### Calling shell -> node in the docker container (blocking)
 #### Run
 ```sh
@@ -88,6 +91,7 @@ Exited (137) Less than a second ago
 | --- | --- | --- |
 | 137 | no | no |
 
+-----
 ### Calling shell -> npm in the docker container (blocking)
 #### Run
 ```sh
@@ -122,6 +126,7 @@ Exited (137) Less than a second ago
 | --- | --- | --- |
 | 137 | no | no |
 
+-----
 ### Calling shell -> node in the docker container (forked process)
 #### Run
 ```sh
@@ -155,6 +160,7 @@ Exited (0) Less than a second ago
 | --- | --- | --- |
 | 0 | yes | no |
 
+-----
 ### Calling shell -> npm in the docker container (forked process)
 #### Run
 ```sh
